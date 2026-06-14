@@ -1,44 +1,52 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class CanvasFade : MonoBehaviour
 {
+    // ì™¸ë¶€ì—ì„œ Transparent ë¨¸í‹°ë¦¬ì–¼ì„ ë°›ì•„ì˜¬ í•„ë“œ
+    private Material transparentMaterial;
     private float fadeDuration = 5f;
     private float timer = 0f;
     private bool isFading = false;
     private Renderer[] renderers;
+    private ParticleSystem smokeEffect;
 
-    public void StartFade()
+    public void StartFade(Material transMat)
     {
+        // ì™¸ë¶€ì—ì„œ ë¨¸í‹°ë¦¬ì–¼ ë°›ì•„ì˜¤ê¸°
+        transparentMaterial = transMat;
         renderers = GetComponentsInChildren<Renderer>();
 
-        // ¸ÓÆ¼¸®¾óÀ» Transparent·Î º¯°æ
+        // ê¸°ì¡´ ë¨¸í‹°ë¦¬ì–¼ ëŒ€ì‹  Transparent ë¨¸í‹°ë¦¬ì–¼ë¡œ êµì²´
         foreach (Renderer r in renderers)
         {
-            foreach (Material mat in r.materials)
+            // ê¸°ì¡´ ìƒ‰ìƒ ë¨¼ì € ì €ì¥
+            Color[] originalColors = new Color[r.materials.Length];
+            for (int i = 0; i < r.materials.Length; i++)
             {
-                mat.SetFloat("_Surface", 1); // URP Transparent
-                mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                mat.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                mat.renderQueue = 3000;
+                originalColors[i] = r.materials[i].color;
             }
+
+            // ë¨¸í‹°ë¦¬ì–¼ êµì²´
+            Material[] mats = r.materials;
+            for (int i = 0; i < mats.Length; i++)
+            {
+                mats[i] = new Material(transparentMaterial);
+                mats[i].color = originalColors[i]; // ì €ì¥í•´ë‘” ìƒ‰ìƒ ì ìš©
+            }
+            r.materials = mats;
         }
 
-        // Rigidbody Áß·Â ÄÑ¼­ ¶³¾îÁö°Ô
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
-        {
-            rb.useGravity = false;
-            rb.velocity = Vector3.zero;
-        }
+            rb.useGravity = true;
 
-        // XR Grab ºñÈ°¼ºÈ­ (Å¸´Â Áß¿¡ ¸ø Àâ°Ô)
         var grab = GetComponent<UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable>();
         if (grab != null)
             grab.enabled = false;
 
         isFading = true;
     }
+
 
     void Update()
     {
@@ -63,8 +71,6 @@ public class CanvasFade : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    private ParticleSystem smokeEffect;
 
     public void SetSmokeEffect(ParticleSystem ps)
     {

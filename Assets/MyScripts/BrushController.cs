@@ -11,6 +11,8 @@ public class BrushController : MonoBehaviour
     private Color currentColor = Color.white;
     private XRGrabInteractable grabInteractable;
 
+    private bool isNearCanvas = false;
+
     private bool isDrawing = false;
     private LineRenderer currentLine; // 현재 그리고 있는 선
     private List<Vector3> currentPoints = new List<Vector3>(); // 현재 선의 점들
@@ -26,17 +28,23 @@ public class BrushController : MonoBehaviour
         }
 
         // 선들 담을 빈 오브젝트 생성
+        // 캔버스 오브젝트 찾기
+        GameObject canvas = GameObject.FindWithTag("Canvas");
         linesParent = new GameObject("DrawnLines");
+
+        // 캔버스가 있으면 자식으로 넣기
+        if (canvas != null)
+            linesParent.transform.SetParent(canvas.transform);
     }
 
     void Update()
     {
         // 그리는 중이면 매 프레임 점 추가
-        if (isDrawing && currentLine != null)
+        if (isDrawing && currentLine != null && isNearCanvas)
         {
-            Vector3 tipPos = brushTip.position;
+            // 월드 좌표를 linesParent 로컬 좌표로 변환
+            Vector3 tipPos = linesParent.transform.InverseTransformPoint(brushTip.position);
 
-            // 마지막 점과 거리가 일정 이상일 때만 추가 (너무 촘촘하면 성능 저하)
             if (currentPoints.Count == 0 ||
                 Vector3.Distance(currentPoints[currentPoints.Count - 1], tipPos) > 0.001f)
             {
@@ -45,6 +53,22 @@ public class BrushController : MonoBehaviour
                 currentLine.SetPositions(currentPoints.ToArray());
             }
         }
+    }
+
+    public void SetNearCanvas(bool value)
+    {
+        isNearCanvas = value;
+    }
+
+    public void SetCanvas(GameObject newCanvas)
+    {
+        // 이미 이 캔버스에 그리고 있으면 무시
+        if (linesParent != null && linesParent.transform.parent == newCanvas.transform)
+            return;
+
+        // 새 DrawnLines 생성
+        linesParent = new GameObject("DrawnLines");
+        linesParent.transform.SetParent(newCanvas.transform);
     }
 
     private void OnActivate(ActivateEventArgs args)
@@ -72,7 +96,7 @@ public class BrushController : MonoBehaviour
         currentLine.startWidth = brushWidth;
         currentLine.endWidth = brushWidth;
         currentLine.positionCount = 0;
-        currentLine.useWorldSpace = true; // 월드 좌표 기준
+        currentLine.useWorldSpace = false;
 
         currentPoints.Clear();
     }
