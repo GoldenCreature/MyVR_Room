@@ -7,6 +7,8 @@ public class BrushController : MonoBehaviour
     public Renderer brushTipRenderer; // 붓 촉 렌더러
     public Transform brushTip; // 붓 촉 위치 기준점
     public float brushWidth = 0.01f; // 선 굵기
+    public AudioSource audioSource; // 인스펙터에서 연결
+    public AudioClip brushSound;    // 브러시 소리 클립
 
     private Color currentColor = Color.white;
     private XRGrabInteractable grabInteractable;
@@ -75,6 +77,14 @@ public class BrushController : MonoBehaviour
     {
         isDrawing = true;
         CreateNewLine(); // 새 선 생성
+
+        // 그리기 소리 재생
+        if (audioSource != null && brushSound != null) 
+        {
+            audioSource.clip = brushSound;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
     }
 
     private void OnDeactivate(DeactivateEventArgs args)
@@ -82,10 +92,16 @@ public class BrushController : MonoBehaviour
         isDrawing = false;
         currentLine = null;
         currentPoints.Clear();
+
+        // 소리 정지
+        if (audioSource != null)
+            audioSource.Stop();
     }
 
     private void CreateNewLine()
     {
+        if (linesParent == null) return;
+
         // 새 오브젝트에 LineRenderer 추가
         GameObject lineObj = new GameObject("Line");
         lineObj.transform.SetParent(linesParent.transform);
