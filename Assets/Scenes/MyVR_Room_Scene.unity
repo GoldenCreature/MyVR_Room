@@ -7991,7 +7991,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -10987,6 +10987,16 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 139200558}
+    - target: {fileID: 5374011104024739410, guid: 4a063823c4a5a7e4abff4435e1162323,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.5657609
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374011104024739410, guid: 4a063823c4a5a7e4abff4435e1162323,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 5988203475216073625, guid: 4a063823c4a5a7e4abff4435e1162323,
         type: 3}
       propertyPath: m_LocalPosition.x
