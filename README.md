@@ -1,5 +1,7 @@
 # 🎨 화가의 방 (Artist's Studio) - VR Room
 
+<img width="1516" height="597" alt="myVR_Room" src="https://github.com/user-attachments/assets/a0a4cfd1-e427-45bf-8d6a-e326a0e698db" />
+
 ## 프로젝트 소개
 Unity XR Interaction Toolkit을 활용한 VR 화가의 방입니다.
 붓을 집어 팔레트에서 색을 묻히고 캔버스에 그림을 그릴 수 있습니다.
@@ -19,3 +21,4 @@ Unity XR Interaction Toolkit을 활용한 VR 화가의 방입니다.
 ## 사용 에셋
 - 교수님 제공 패키지 (방, 가구, 이펙트)
 - Free3D - Easel, Paint Brush
+
