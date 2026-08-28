@@ -19,6 +19,6 @@ Unity XR Interaction Toolkit을 활용한 VR 화가의 방입니다.
 - 🔥 난로에 캔버스 소각
 
 ## 사용 에셋
-- 교수님 제공 패키지 (방, 가구, 이펙트)
+- Free 방, 가구, 이펙트 에셋
 - Free3D - Easel, Paint Brush
 
